@@ -146,4 +146,9 @@ public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implement
             f.delete();
         }
     }
+
+    @Override
+    public String getDirectory() {
+        return directory;
+    }
 }

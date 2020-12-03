@@ -5,7 +5,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class ServeurHDFS {
-    //arg[0] = dossier ou le service de Nommage enregistre les fragments
+    //arg[0] = dossier ou le service enregistre les fragments
     //arg[1] = adresse pour acceder au serveur de Nommage
     //arg[2] = port
     public static void main(String args[]) {
