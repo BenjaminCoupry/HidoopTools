@@ -30,7 +30,7 @@ public class getterGestionnairesFragments {
                     String port = spt[3];
                     try {
                         // get the stub of the server object from the rmiregistry
-                        GestionnaireFragments gf = (GestionnaireFragments) Naming.lookup(adresse + ":" + port + "/serviceHDFS");
+                        GestionnaireFragments gf = (GestionnaireFragments) Naming.lookup(adresse + ":" + port + "/serviceHDFS"+nom);
                         gestionnaires.put(nom, gf);
                     } catch (Exception exc) {
                         System.out.println(exc.getMessage());
