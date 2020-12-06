@@ -1,7 +1,5 @@
 package Utils;
 
-import javafx.util.Pair;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
