@@ -1,9 +1,13 @@
 package ordo;
 
+import java.rmi.RemoteException;
+
+import formats.Format;
 import formats.Format.Type;
 import map.MapReduce;
+import map.Mapper;
 
-public class Job implements JobInterfaceX {
+public class Job implements JobInterfaceX, Worker {
 
   @Override
   public void setInputFormat(Type ft) {
@@ -93,6 +97,11 @@ public class Job implements JobInterfaceX {
   public SortComparator getSortComparator() {
     // TODO Auto-generated method stub
     return null;
+  }
+
+  @Override
+  public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
+    m.map(reader, writer);
   }
 
 }
