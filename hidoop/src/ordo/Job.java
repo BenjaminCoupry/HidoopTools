@@ -9,21 +9,22 @@ import map.Mapper;
 
 public class Job implements JobInterfaceX, Worker {
 
+  private Type informat;
+  private String fname;
+
   @Override
   public void setInputFormat(Type ft) {
-    // TODO Auto-generated method stub
-
+    this.informat = ft;
   }
 
   @Override
   public void setInputFname(String fname) {
-    // TODO Auto-generated method stub
-
+    this.fname = fname;
   }
 
   @Override
   public void startJob(MapReduce mr) {
-    // TODO Auto-generated method stub
+    
 
   }
 
