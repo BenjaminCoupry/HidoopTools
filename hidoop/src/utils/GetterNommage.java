@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,9 +6,9 @@ import java.rmi.Naming;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class getterNommage {
+public class GetterNommage {
     private Nommage nommage;
-    public getterNommage(String configuration)
+    public GetterNommage(String configuration)
     {
         nommage = null;
         File config = new File(configuration);

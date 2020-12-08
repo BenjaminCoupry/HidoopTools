@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -6,13 +6,13 @@ import java.rmi.Naming;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class getterGestionnairesFragments {
+public class GetterGestionnairesFragments {
     public HashMap<String, GestionnaireFragments> getGestionnaires() {
         return gestionnaires;
     }
 
     private HashMap<String,GestionnaireFragments> gestionnaires;
-    public getterGestionnairesFragments(String configuration)
+    public GetterGestionnairesFragments(String configuration)
     {
         gestionnaires = new HashMap<>();
         File config = new File(configuration);

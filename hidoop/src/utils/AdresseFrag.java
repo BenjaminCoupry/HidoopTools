@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 public class AdresseFrag implements InfoAdresse{
     String nomMachine;

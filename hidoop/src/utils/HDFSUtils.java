@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,8 +16,8 @@ public class HDFSUtils {
     String configuration;
     public HDFSUtils(String config)
     {
-        getterNommage GN = new getterNommage(config);
-        getterGestionnairesFragments GF = new getterGestionnairesFragments(config);
+        GetterNommage GN = new GetterNommage(config);
+        GetterGestionnairesFragments GF = new GetterGestionnairesFragments(config);
         noms = GN.getNommage();
         configuration = config;
         repertoire = GF.getGestionnaires();

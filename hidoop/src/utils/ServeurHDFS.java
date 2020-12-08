@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;

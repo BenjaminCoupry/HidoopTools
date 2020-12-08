@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import com.sun.istack.internal.Nullable;
 
