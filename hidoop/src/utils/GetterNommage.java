@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class GetterNommage {
+
     private Nommage nommage;
+    
     public GetterNommage(String configuration)
     {
         nommage = null;
@@ -39,6 +41,7 @@ public class GetterNommage {
 
         } catch (Exception exc) { System.out.println(exc.getMessage());}
     }
+
     public Nommage getNommage()
     {
         return nommage;

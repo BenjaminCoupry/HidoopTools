@@ -1,6 +1,7 @@
 package utils;
 
 public class AdresseFrag implements InfoAdresse{
+    
     String nomMachine;
     String nomLocal;
     String nomFichierComplet;

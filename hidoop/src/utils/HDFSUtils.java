@@ -1,19 +1,16 @@
 package utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.Serializable;
-import java.rmi.Naming;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.rmi.*;
+import java.util.*;
+import formats.*;
 
 public class HDFSUtils {
+
     Nommage noms;
     HashMap<String,GestionnaireFragments> repertoire;
     String configuration;
+
     public HDFSUtils(String config)
     {
         GetterNommage GN = new GetterNommage(config);
@@ -129,7 +126,7 @@ public class HDFSUtils {
 
     //Utile pour le groupe HIDOOP
     //Retourne la liste des  infos concernant les fragments du fichier : infos, ip de la machine de stockage, repertoire de stockage
-    List<InfoEtendue> getAdressesFragments(String nomFichierHDFS) throws RemoteException, FileNotFoundException
+    public List<InfoEtendue> getAdressesFragments(String nomFichierHDFS) throws RemoteException, FileNotFoundException
     {
         List<InfoEtendue> retour = new ArrayList<>();
         for(InfoAdresse inf : noms.getAdressesFragments(nomFichierHDFS))
@@ -141,5 +138,5 @@ public class HDFSUtils {
         }
         return retour;
     }
-
+    
 }

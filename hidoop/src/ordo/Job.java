@@ -2,10 +2,15 @@ package ordo;
 
 import java.rmi.RemoteException;
 
+import formats.Format.*;
 import formats.Format;
-import formats.Format.Type;
-import map.MapReduce;
-import map.Mapper;
+import formats.KVFormat;
+import formats.LineFormat;
+import map.*;
+import utils.*;
+import hdfs.*;
+import java.util.*;
+
 
 public class Job implements JobInterfaceX, Worker {
 
@@ -24,8 +29,44 @@ public class Job implements JobInterfaceX, Worker {
 
   @Override
   public void startJob(MapReduce mr) {
-    
+    //récupérer les stubs
+    HDFSUtils hdfsu = new HDFSUtils("../../config/nommage.txt");
 
+    try {
+      //récupérer les adresses des fragments
+      List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.fname);
+
+      // nom du fichier traite
+      String mpfname = "res-" + this.fname;
+
+      //traiter les fragments
+      for (InfoEtendue info : adresses) {
+        String nomReader = info.getNomLocal();
+        String nomWriter = "res-" + info.getNomLocal();
+        Format reader = new LineFormat(nomReader);
+        Format writer = new KVFormat(nomWriter);
+        CallBack cb = new CallBack();
+        //créer les fragments traites
+        runMap(mr, reader, writer, cb);
+        //ajouter les fragments aux systemes
+        hdfsu.ajouterFragmentSysteme(info.getNomMachine(), nomWriter, mpfname);
+      }
+
+      //lire le nouveau fichier creer à partir des nouveaux fragments
+      HdfsClient.HdfsRead(mpfname, "final-" + mpfname);
+
+      //reduire le fichier que l'on vient de lire
+      
+
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Override
+  public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
+    m.map(reader, writer);
   }
 
   @Override
@@ -98,11 +139,6 @@ public class Job implements JobInterfaceX, Worker {
   public SortComparator getSortComparator() {
     // TODO Auto-generated method stub
     return null;
-  }
-
-  @Override
-  public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
-    m.map(reader, writer);
   }
 
 }
