@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements GestionnaireFragments{
+
+    private static final long serialVersionUID = 1L;
     String directory;
 
     public Format.Type getFt() {

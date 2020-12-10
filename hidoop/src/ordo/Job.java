@@ -2,10 +2,8 @@ package ordo;
 
 import java.rmi.RemoteException;
 
+import formats.*;
 import formats.Format.*;
-import formats.Format;
-import formats.KVFormat;
-import formats.LineFormat;
 import map.*;
 import utils.*;
 import hdfs.*;
@@ -14,50 +12,99 @@ import java.util.*;
 
 public class Job implements JobInterfaceX, Worker {
 
-  private Type informat;
-  private String fname;
+  private Type inFormat;
+  private Type outFormat;
+  private String outFname;
+  private String inFname;
 
   @Override
   public void setInputFormat(Type ft) {
-    this.informat = ft;
+    this.inFormat = ft;
   }
 
   @Override
-  public void setInputFname(String fname) {
-    this.fname = fname;
+  public Type getInputFormat() {
+    return this.inFormat;
   }
+
+
+  @Override
+  public void setInputFname(String fname) {
+    this.inFname = fname;
+  }
+
+  @Override
+  public String getInputFname() {
+    return this.inFname;
+  }
+
+
+  @Override
+  public void setOutputFormat(Type ft) {
+    this.outFormat = ft;
+  }
+
+  @Override
+  public Type getOutputFormat() {
+    return this.outFormat;
+  }
+
+
+  @Override
+  public void setOutputFname(String fname) {
+    this.outFname = fname;
+  }
+
+  @Override
+  public String getOutputFname() {
+    return this.outFname;
+  }
+
 
   @Override
   public void startJob(MapReduce mr) {
     //récupérer les stubs
-    HDFSUtils hdfsu = new HDFSUtils("../../config/nommage.txt");
+    HDFSUtils hdfsu = new HDFSUtils("../../config/adresses.txt");
 
     try {
       //récupérer les adresses des fragments
-      List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.fname);
+      List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.inFname);
 
       // nom du fichier traite
-      String mpfname = "res-" + this.fname;
+      String mpfname = "res-" + this.inFname;
 
       //traiter les fragments
       for (InfoEtendue info : adresses) {
-        String nomReader = info.getNomLocal();
-        String nomWriter = "res-" + info.getNomLocal();
-        Format reader = new LineFormat(nomReader);
-        Format writer = new KVFormat(nomWriter);
+        String nomReaderMap = info.getNomLocal();
+        String nomWriterMap = "res-" + info.getNomLocal();
+        Format readerMap;
+        if (this.inFormat == Type.KV) {
+          readerMap = new KVFormatS(this.inFname);
+        } else {
+          readerMap = new LineFormatS(nomReaderMap);
+        }
+        Format writerMap = new KVFormatS(nomWriterMap);
         CallBack cb = new CallBack();
         //créer les fragments traites
-        runMap(mr, reader, writer, cb);
+        runMap(mr, readerMap, writerMap, cb);
         //ajouter les fragments aux systemes
-        hdfsu.ajouterFragmentSysteme(info.getNomMachine(), nomWriter, mpfname);
+        hdfsu.ajouterFragmentSysteme(info.getNomMachine(), nomWriterMap, mpfname);
       }
 
       //lire le nouveau fichier creer à partir des nouveaux fragments
-      HdfsClient.HdfsRead(mpfname, "final-" + mpfname);
+      String nomReaderRed = "loc-" + mpfname;
+      HdfsClient.HdfsRead(mpfname, nomReaderRed);
 
       //reduire le fichier que l'on vient de lire
+      Format readerRed = new KVFormatS(nomReaderRed);
+      Format writerRed;
+      if (this.outFormat == Type.KV) {
+        writerRed = new KVFormatS(this.outFname);
+      } else {
+        writerRed = new LineFormatS(this.outFname);
+      }
       
-
+      mr.reduce(readerRed, writerRed);
 
     } catch (Exception e) {
       e.printStackTrace();
@@ -82,18 +129,6 @@ public class Job implements JobInterfaceX, Worker {
   }
 
   @Override
-  public void setOutputFormat(Type ft) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void setOutputFname(String fname) {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
   public void setSortComparator(SortComparator sc) {
     // TODO Auto-generated method stub
 
@@ -109,30 +144,6 @@ public class Job implements JobInterfaceX, Worker {
   public int getNumberOfMaps() {
     // TODO Auto-generated method stub
     return 0;
-  }
-
-  @Override
-  public Type getInputFormat() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Type getOutputFormat() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getInputFname() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public String getOutputFname() {
-    // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
