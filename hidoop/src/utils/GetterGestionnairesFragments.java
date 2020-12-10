@@ -1,5 +1,7 @@
 package utils;
 
+import formats.Format;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.rmi.Naming;
@@ -10,11 +12,19 @@ public class GetterGestionnairesFragments {
     public HashMap<String, GestionnaireFragments> getGestionnaires() {
         return gestionnaires;
     }
+    public HashMap<String, String> getFormats() {
+        return formats;
+    }
 
     private HashMap<String,GestionnaireFragments> gestionnaires;
+
+
+    private HashMap<String,String> formats;
     public GetterGestionnairesFragments(String configuration)
     {
         gestionnaires = new HashMap<>();
+        formats = new HashMap<>();
+
         File config = new File(configuration);
         try {
             FileInputStream fis=new FileInputStream(config);
@@ -31,6 +41,20 @@ public class GetterGestionnairesFragments {
                     try {
                         // get the stub of the server object from the rmiregistry
                         GestionnaireFragments gf = (GestionnaireFragments) Naming.lookup(adresse + ":" + port + "/serviceHDFS"+nom);
+                        if(gf instanceof GestionnaireFragmentsHardDisk) {
+                            formats.put(nom,"HD");
+                        }else if(gf instanceof GestionnaireFragmentsFormat)
+                        {
+                            GestionnaireFragmentsFormat gff = (GestionnaireFragmentsFormat)gf;
+                            if(gff.getFt().equals(Format.Type.LINE))
+                            {
+                                formats.put(nom,"Line");
+                            }
+                            else if(gff.getFt().equals(Format.Type.KV))
+                            {
+                                formats.put(nom,"Kv");
+                            }
+                        }
                         gestionnaires.put(nom, gf);
                     } catch (Exception exc) {
                         System.out.println(exc.getMessage());

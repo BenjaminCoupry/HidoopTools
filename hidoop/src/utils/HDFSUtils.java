@@ -9,6 +9,7 @@ public class HDFSUtils {
 
     Nommage noms;
     HashMap<String,GestionnaireFragments> repertoire;
+    HashMap<String,String> formats;
     String configuration;
 
     public HDFSUtils(String config)
@@ -16,6 +17,7 @@ public class HDFSUtils {
         GetterNommage GN = new GetterNommage(config);
         GetterGestionnairesFragments GF = new GetterGestionnairesFragments(config);
         noms = GN.getNommage();
+        formats = GF.getFormats();
         configuration = config;
         repertoire = GF.getGestionnaires();
     }
@@ -42,15 +44,15 @@ public class HDFSUtils {
 
     //Utile pour le groupe HDFS
     //Ajoute la liste de fragments frags au systeme (fichier et nommage) sous le nom nomHDFS
-    public void Write(String nomHDFS, List<Serializable> frags)
+    public void Write(String nomHDFS, List<List<KV>> frags, String ft)
     {
-        List<String> machines = getNomsMachines();
+        List<String> machines = getNomsMachines(ft);
         int n = 0;
-        for(Serializable o : frags)
+        for(List<KV> o : frags)
         {
             try {
                 String machine = machines.get(n % machines.size());
-                ajouterFragmentSysteme(nomHDFS,machine,o);
+                ajouterFragmentSysteme(nomHDFS,machine, (Serializable) o);
                 n++;
             }catch(Exception e){e.printStackTrace();}
         }
@@ -72,9 +74,18 @@ public class HDFSUtils {
     }
 
     //Renvoie la liste des machines de HDFS
-    public List<String> getNomsMachines()
+    public List<String> getNomsMachines(String ft)
     {
-        return (List<String>) repertoire.keySet();
+        List<String> total = (List<String>) repertoire.keySet();
+        List<String> retour = new ArrayList<>();
+        for(String nom : total)
+        {
+            if(formats.get(nom).equals(ft))
+            {
+                retour.add(nom);
+            }
+        }
+        return retour;
     }
 
 
