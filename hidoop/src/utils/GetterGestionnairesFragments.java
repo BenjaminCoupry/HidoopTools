@@ -9,17 +9,18 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class GetterGestionnairesFragments {
+    
     public HashMap<String, GestionnaireFragments> getGestionnaires() {
         return gestionnaires;
     }
+
     public HashMap<String, String> getFormats() {
         return formats;
     }
 
     private HashMap<String,GestionnaireFragments> gestionnaires;
-
-
     private HashMap<String,String> formats;
+
     public GetterGestionnairesFragments(String configuration)
     {
         gestionnaires = new HashMap<>();

@@ -76,7 +76,7 @@ public class Job implements JobInterfaceX, Worker {
       //traiter les fragments
       for (InfoEtendue info : adresses) {
         String nomReaderMap = info.getNomLocal();
-        String nomWriterMap = "res-" + info.getNomLocal();
+        String nomWriterMap = "res-" + nomReaderMap;
         Format readerMap;
         if (this.inFormat == Type.KV) {
           readerMap = new KVFormatS(this.inFname);
@@ -103,9 +103,13 @@ public class Job implements JobInterfaceX, Worker {
       } else {
         writerRed = new LineFormatS(this.outFname);
       }
-      
-      mr.reduce(readerRed, writerRed);
 
+      readerRed.open(Format.OpenMode.R);
+      writerRed.open(Format.OpenMode.W);
+      mr.reduce(readerRed, writerRed);
+      readerRed.close();
+      writerRed.close();
+      
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -113,7 +117,11 @@ public class Job implements JobInterfaceX, Worker {
 
   @Override
   public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
+    reader.open(Format.OpenMode.R);
+    writer.open(Format.OpenMode.W);
     m.map(reader, writer);
+    reader.close();
+    writer.close();
   }
 
   @Override

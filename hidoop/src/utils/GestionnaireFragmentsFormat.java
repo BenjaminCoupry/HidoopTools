@@ -17,16 +17,17 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
 
     private static final long serialVersionUID = 1L;
     String directory;
+    Format.Type ft;
+    private static final Pattern ext = Pattern.compile("(?<=.)\\.[^.]+$");
 
     public Format.Type getFt() {
         return ft;
     }
 
-    Format.Type ft;
-    private static final Pattern ext = Pattern.compile("(?<=.)\\.[^.]+$");
     public GestionnaireFragmentsFormat(String directory, Format.Type f)throws RemoteException {
         this.directory = directory;
     }
+
     public static String getFileNameWithoutExtension(File file) {
         return ext.matcher(file.getName()).replaceAll("");
     }
@@ -69,7 +70,6 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     //contenu doit etre une liste de KV
     @Override
     public String ecrireFragment(Serializable contenu) {
-
         String nom = getNomNouveauFichier()+".fragment";
         enregistrerFragment(contenu,new File(nom));
         return nom;
