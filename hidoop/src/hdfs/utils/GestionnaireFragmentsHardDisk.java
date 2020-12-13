@@ -1,10 +1,6 @@
-package utils;
+package hdfs.utils;
 
 import com.sun.istack.internal.Nullable;
-import formats.Format;
-import formats.KV;
-import formats.KVFormat;
-import formats.LineFormat;
 
 import java.io.*;
 import java.rmi.RemoteException;
@@ -13,18 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements GestionnaireFragments{
-
-    private static final long serialVersionUID = 1L;
+public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implements GestionnaireFragments{
     String directory;
-    Format.Type ft;
+
     private static final Pattern ext = Pattern.compile("(?<=.)\\.[^.]+$");
 
-    public Format.Type getFt() {
-        return ft;
-    }
-
-    public GestionnaireFragmentsFormat(String directory, Format.Type f)throws RemoteException {
+    public GestionnaireFragmentsHardDisk(String directory)throws RemoteException {
         this.directory = directory;
     }
 
@@ -67,7 +57,6 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
         return null;
     }
 
-    //contenu doit etre une liste de KV
     @Override
     public String ecrireFragment(Serializable contenu) {
         String nom = getNomNouveauFichier()+".fragment";
@@ -83,28 +72,12 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     private void enregistrerFragment(Serializable frags , File f)
     {
         try {
-            List<KV> kvs = (List<KV>)frags;
-            Format format_reel;
-            if (ft.equals(Format.Type.KV))
-            {
-                format_reel = new KVFormat(directory);
-
-            }
-            else if(ft.equals(Format.Type.LINE))
-            {
-                format_reel = new LineFormat(directory);
-            }
-            else
-            {
-                throw new IOException();
-            }
-            format_reel.open(Format.OpenMode.W);
-            for(KV kv : kvs)
-            {
-                format_reel.write(kv);
-            }
-            format_reel.close();
-
+            FileOutputStream fileOut =
+                    new FileOutputStream(f);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(frags);
+            out.close();
+            fileOut.close();
             System.out.printf("Serialized data is saved");
         } catch (IOException i) {
             i.printStackTrace();
@@ -115,36 +88,19 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     {
         Object ret = null;
         try {
-            ret = new ArrayList<KV>();
-            Format format_reel;
-            if (ft.equals(Format.Type.KV))
-            {
-                format_reel = new KVFormat(directory);
-
-            }
-            else if(ft.equals(Format.Type.LINE))
-            {
-                format_reel = new LineFormat(directory);
-            }
-            else
-            {
-                throw new IOException();
-            }
-            format_reel.open(Format.OpenMode.R);
-            KV lu;
-            do {
-                lu = format_reel.read();
-                if(lu!=null)
-                {
-                    ((List<KV>)ret).add(lu);
-                }
-            }while(lu!=null);
-            format_reel.close();
-
-            System.out.printf("Serialized data is saved");
+            FileInputStream fileIn = new FileInputStream(f);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            ret = (Object) in.readObject();
+            in.close();
+            fileIn.close();
         } catch (IOException i) {
             i.printStackTrace();
-        }
+            return ret;
+        } catch (ClassNotFoundException c) {
+            System.out.println("class not found");
+            c.printStackTrace();
+            return ret;
+        } 
         return ret;
     }
 

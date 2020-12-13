@@ -1,9 +1,8 @@
-package utils;
+package hdfs.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.rmi.Naming;
-import java.util.HashMap;
 import java.util.Scanner;
 
 public class GetterNommage {

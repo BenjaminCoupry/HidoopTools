@@ -1,4 +1,4 @@
-package utils;
+package hdfs.utils;
 
 public class InfoEtendue extends AdresseFrag implements InfoAdresse{
 

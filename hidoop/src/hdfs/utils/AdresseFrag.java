@@ -1,4 +1,4 @@
-package utils;
+package hdfs.utils;
 
 public class AdresseFrag implements InfoAdresse{
     

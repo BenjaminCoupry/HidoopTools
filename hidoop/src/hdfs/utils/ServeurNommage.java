@@ -1,4 +1,4 @@
-package utils;
+package hdfs.utils;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;

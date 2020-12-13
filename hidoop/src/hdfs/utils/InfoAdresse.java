@@ -1,4 +1,4 @@
-package utils;
+package hdfs.utils;
 
 import java.io.Serializable;
 

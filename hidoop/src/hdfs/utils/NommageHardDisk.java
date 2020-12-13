@@ -1,4 +1,4 @@
-package utils;
+package hdfs.utils;
 
 import com.sun.istack.internal.Nullable;
 

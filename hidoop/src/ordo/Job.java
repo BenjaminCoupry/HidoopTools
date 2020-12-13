@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 import formats.*;
 import formats.Format.*;
 import map.*;
-import utils.*;
+import hdfs.utils.*;
 import hdfs.*;
 import java.util.*;
 
