@@ -87,12 +87,12 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             Format format_reel;
             if (ft.equals(Format.Type.KV))
             {
-                format_reel = new KVFormat(directory);
+                format_reel = new KVFormat(f.getPath());
 
             }
             else if(ft.equals(Format.Type.LINE))
             {
-                format_reel = new LineFormat(directory);
+                format_reel = new LineFormat(f.getPath());
             }
             else
             {
@@ -119,12 +119,12 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             Format format_reel;
             if (ft.equals(Format.Type.KV))
             {
-                format_reel = new KVFormat(directory);
+                format_reel = new KVFormat(f.getPath());
 
             }
             else if(ft.equals(Format.Type.LINE))
             {
-                format_reel = new LineFormat(directory);
+                format_reel = new LineFormat(f.getPath());
             }
             else
             {

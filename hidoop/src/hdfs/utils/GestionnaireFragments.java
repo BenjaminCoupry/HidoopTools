@@ -8,6 +8,7 @@ import java.rmi.RemoteException;
 
 public interface GestionnaireFragments extends Remote {
     String ecrireFragment(Serializable contenu)throws RemoteException;
+    //Retourne List<KV> pour les instances format
     Object lireFragment(String nom)throws RemoteException;
     boolean fragmentExiste(String nom)throws RemoteException;
     String getNomNouveauFichier()throws RemoteException;

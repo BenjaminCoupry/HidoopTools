@@ -1,10 +1,15 @@
 /* une PROPOSITION de squelette, incomplète et adaptable... */
 
 package hdfs;
+import config.Project;
 import formats.Format;
 import formats.KV;
 import formats.KVFormat;
 import formats.LineFormat;
+import hdfs.utils.HDFSUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HdfsClient {
 
@@ -14,12 +19,93 @@ public class HdfsClient {
         System.out.println("Usage: java HdfsClient delete <file>");
     }
 	
-    public static void HdfsDelete(String hdfsFname) {}
+    public static void HdfsDelete(String hdfsFname) {
+        HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
+        utils.Delete(hdfsFname);
+    }
 	
     public static void HdfsWrite(Format.Type fmt, String localFSSourceFname, 
-     int repFactor) { }
+     int repFactor) {
+        List<KV> fichLoc = new ArrayList<>();
+        HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
+        Format format_reel = null;
+        String strFmt = "";
+        if (fmt.equals(Format.Type.KV))
+        {
+            format_reel = new KVFormat(localFSSourceFname);
+            strFmt = "Line";
+        }
+        else if(fmt.equals(Format.Type.LINE))
+        {
+            format_reel = new LineFormat(localFSSourceFname);
+            strFmt = "Kv";
+        }
+        format_reel.open(Format.OpenMode.R);
+        KV lu;
+        do {
+            lu = format_reel.read();
+            if(lu!=null)
+            {
+                fichLoc.add(lu);
+            }
+        }while(lu!=null);
+        format_reel.close();
+        List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
+        utils.Write(localFSSourceFname,frags,strFmt);
+    }
 
-    public static void HdfsRead(String hdfsFname, String localFSDestFname) { }
+    private static List<List<KV>> Splitter(List<KV> lkv, int repet, HDFSUtils utils, String strfmt)
+    {
+        int tailleFragMin = 5;
+        List<List<KV>> ret = new ArrayList<>();
+        int nbserv = utils.getNomsMachines(strfmt).size();
+        for(int i=0;i<nbserv;i++)
+        {
+            ret.add(new ArrayList<>());
+        }
+        int i=0;
+        for(KV kv : lkv)
+        {
+            for(int j=0;j<repet;j++)
+            {
+                ret.get(i%nbserv).add(kv);
+                i++;
+            }
+        }
+        //S'assurer d'une taille de fragments minimale
+        List<List<KV>> ret2 = new ArrayList<>();
+        List<KV> setup = new ArrayList<>();
+        for(List<KV> lkv2 : ret)
+        {
+            setup.addAll(lkv2);
+            if(setup.size()>tailleFragMin)
+            {
+                ret2.add(setup);
+                setup = new ArrayList<>();
+            }
+        }
+        return ret2;
+    }
+
+    public static void HdfsRead(String hdfsFname, String localFSDestFname) {
+        HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
+        Object lu =  utils.Read(hdfsFname);
+        if(lu instanceof List)
+        {
+            List<List<KV>> llkv = (List<List<KV>>) lu;
+            Format format_reel = new KVFormat(localFSDestFname);
+            format_reel.open(Format.OpenMode.W);
+            for(List<KV> lkv : llkv)
+            {
+                for(KV kv : lkv)
+                {
+                    format_reel.write(kv);
+                }
+            }
+
+            format_reel.close();
+        }
+    }
 
 	
     public static void main(String[] args) {
