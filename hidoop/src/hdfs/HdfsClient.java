@@ -78,11 +78,16 @@ public class HdfsClient {
         for(List<KV> lkv2 : ret)
         {
             setup.addAll(lkv2);
-            if(setup.size()>tailleFragMin)
+            if(setup.size()>=tailleFragMin)
             {
                 ret2.add(setup);
                 setup = new ArrayList<>();
             }
+        }
+        //Ajouter le dernier fragment trop petit
+        if(setup.size()<tailleFragMin && setup.size()>0)
+        {
+            ret2.add(setup);
         }
         return ret2;
     }
