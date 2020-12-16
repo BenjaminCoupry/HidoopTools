@@ -65,6 +65,7 @@ public class Job implements JobInterfaceX {
   public void startJob(MapReduce mr) {
     //récupérer les stubs
     HDFSUtils hdfsu = new HDFSUtils("../../config/adresses.txt");
+    Worker worker = GetterWorker("../../config/adresses.txt");
 
     try {
       //récupérer les adresses des fragments
