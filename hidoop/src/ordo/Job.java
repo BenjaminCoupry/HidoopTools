@@ -10,7 +10,7 @@ import hdfs.*;
 import java.util.*;
 
 
-public class Job implements JobInterfaceX, Worker {
+public class Job implements JobInterfaceX {
 
   private Type inFormat;
   private Type outFormat;
@@ -113,15 +113,6 @@ public class Job implements JobInterfaceX, Worker {
     } catch (Exception e) {
       e.printStackTrace();
     }
-  }
-
-  @Override
-  public void runMap(Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
-    reader.open(Format.OpenMode.R);
-    writer.open(Format.OpenMode.W);
-    m.map(reader, writer);
-    reader.close();
-    writer.close();
   }
 
   @Override

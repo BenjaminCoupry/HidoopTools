@@ -4,18 +4,17 @@ import formats.Format;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 public class ServeurHDFS {
-    //arg[0] = dossier ou le service enregistre les fragments
-    //arg[1] = adresse pour acceder au serveur de Nommage
-    //arg[2] = port
-    //arg[3] nom de la machine
+    //args[0] = dossier ou le service enregistre les fragments
+    //args[1] = adresse pour acceder au serveur HDFS
+    //args[2] = port
+    //args[3] nom de la machine
     //args[4] fragment type
     public static void main(String args[]) {
         try {
             int port = Integer.parseInt(args[2]);
-            Registry registery= LocateRegistry.createRegistry(port);
+            LocateRegistry.createRegistry(port);
             // Create an instance of the server object
             GestionnaireFragments frag;
             switch (args[4])

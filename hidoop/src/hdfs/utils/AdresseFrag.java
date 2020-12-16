@@ -2,6 +2,8 @@ package hdfs.utils;
 
 public class AdresseFrag implements InfoAdresse{
     
+    private static final long serialVersionUID = 1L;
+
     String nomMachine;
     String nomLocal;
     String nomFichierComplet;

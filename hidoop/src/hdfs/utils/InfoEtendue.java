@@ -1,6 +1,8 @@
 package hdfs.utils;
 
-public class InfoEtendue extends AdresseFrag implements InfoAdresse{
+public class InfoEtendue extends AdresseFrag {
+
+    private static final long serialVersionUID = 1L;
 
     public String getAdresseIP() {
         return adresseIP;

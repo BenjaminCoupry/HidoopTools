@@ -2,7 +2,6 @@ package hdfs.utils;
 
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 
 public class ServeurNommage {
     //arg[0] = dossier ou le service de Nommage enregistre les fragments
@@ -11,7 +10,7 @@ public class ServeurNommage {
     public static void main(String args[]) {
         try {
             int port = Integer.parseInt(args[2]);
-            Registry registery= LocateRegistry.createRegistry(port);
+            LocateRegistry.createRegistry(port);
             // Create an instance of the server object
             Nommage nommage = new NommageHardDisk(args[0]);
             // Register the object with the naming service

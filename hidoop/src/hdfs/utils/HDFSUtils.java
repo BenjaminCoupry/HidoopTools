@@ -103,7 +103,7 @@ public class HDFSUtils {
     {
         String machine = info.getNomMachine();
         FileInputStream fis=new FileInputStream(configuration);
-        Scanner sc=new Scanner(fis);    //file to be scanned
+        Scanner sc =new Scanner(fis);    //file to be scanned
         //returns true if there is another line to read
         while(sc.hasNextLine())
         {
