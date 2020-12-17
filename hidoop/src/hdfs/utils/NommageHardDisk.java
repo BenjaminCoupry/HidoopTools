@@ -19,9 +19,6 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
 
     private static final Pattern ext = Pattern.compile("(?<=.)\\.[^.]+$");
 
-    public static String getFileNameWithoutExtension(File file) {
-        return ext.matcher(file.getName()).replaceAll("");
-    }
 
     private List<File> getFichInDir()
     {
@@ -40,6 +37,8 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
                     }
                 }
             }
+            System.out.println("repertoire contient :");
+            System.out.println(results.toString());
             return results;
         }
     }
@@ -52,6 +51,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         {
             if(nf.equals(nomFichier+".nommage"))
             {
+                System.out.println("fichier de nommage trouvé");
                 return nf;
             }
         }
