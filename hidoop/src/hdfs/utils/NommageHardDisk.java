@@ -50,7 +50,8 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
-            if(Paths.get(nf.getName()).getFileName().equals(nomFichier+".nommage"))
+            String pathSolo = Paths.get(nf.getName()).getFileName().toString();
+            if(pathSolo.equals(nomFichier+".nommage"))
             {
                 System.out.println("fichier de nommage trouvé");
                 return nf;
