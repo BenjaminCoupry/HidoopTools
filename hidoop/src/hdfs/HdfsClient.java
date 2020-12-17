@@ -27,6 +27,7 @@ public class HdfsClient {
     public static void HdfsWrite(Format.Type fmt, String localFSSourceFname, 
      int repFactor) {
         List<KV> fichLoc = new ArrayList<>();
+
         HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
         Format format_reel = null;
         String strFmt = "";
@@ -46,10 +47,12 @@ public class HdfsClient {
             lu = format_reel.read();
             if(lu!=null)
             {
-                fichLoc.add(lu);
+                fichLoc.add(new KV(lu.k,lu.v));
             }
         }while(lu!=null);
         format_reel.close();
+        System.out.println("Fichier local lu");
+        System.out.println(lu.toString());
         List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
         System.out.println("Decoupage en "+frags.size()+" fragments");
         System.out.println(frags.toString());
