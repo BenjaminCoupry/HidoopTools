@@ -42,6 +42,8 @@ public class GetterGestionnairesFragments {
                     try {
                         // get the stub of the server object from the rmiregistry
                         GestionnaireFragments gf = (GestionnaireFragments) Naming.lookup(adresse + ":" + port + "/serviceHDFS"+nom);
+                        System.out.println("type du gestionnaire de fragment :");
+                        System.out.println(gf.toString());
                         if(gf instanceof GestionnaireFragmentsHardDisk) {
                             formats.put(nom,"HD");
                         }else if(gf instanceof GestionnaireFragmentsFormat)
