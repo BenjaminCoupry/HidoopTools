@@ -2,22 +2,22 @@ package hdfs.utils;
 
 import formats.Format;
 
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
 public class ServeurHDFS {
     //args[0] = dossier ou le service enregistre les fragments
-    //args[1] = adresse pour acceder au serveur HDFS
-    //args[2] = port
-    //args[3] nom de la machine
-    //args[4] fragment type
+    //args[1] = port
+    //args[2] nom de la machine
+    //args[3] fragment type
     public static void main(String args[]) {
         try {
             int port = Integer.parseInt(args[2]);
             LocateRegistry.createRegistry(port);
             // Create an instance of the server object
             GestionnaireFragments frag;
-            switch (args[4])
+            switch (args[3])
             {
                 case "HD":
                     frag = new GestionnaireFragmentsHardDisk(args[0]);
@@ -34,7 +34,7 @@ public class ServeurHDFS {
             }
 
             // Register the object with the naming service
-            Naming.rebind(args[1]+":"+port+"/serviceHDFS"+args[3], frag);
+            Naming.rebind("//"+ InetAddress.getLocalHost().getHostName()+":"+port+"/serviceHDFS"+args[2], frag);
             System.out.println(" bound in registry");
         } catch (Exception exc) {System.out.println(exc.getMessage()); }
     }
