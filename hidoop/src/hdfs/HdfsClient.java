@@ -117,7 +117,6 @@ public class HdfsClient {
                     format_reel.write(kv);
                 }
             }
-
             format_reel.close();
         }
     }
@@ -130,7 +129,7 @@ public class HdfsClient {
             if (args.length<2) {usage(); return;}
 
             switch (args[0]) {
-              case "read": HdfsRead(args[1],null); break;
+              case "read": HdfsRead(args[1],args[2]); break;
               case "delete": HdfsDelete(args[1]); break;
               case "write": 
                 Format.Type fmt;
