@@ -76,6 +76,8 @@ public class HDFSUtils {
     //Renvoie la liste des machines de HDFS
     public List<String> getNomsMachines(String ft)
     {
+        System.out.println("Recherche....");
+        System.out.println(ft);
         List<Object> total = Arrays.asList(repertoire.keySet().toArray());
         System.out.println("Machines  HDFS totales :");
         System.out.println(total.toString());

@@ -59,6 +59,8 @@ public class HdfsClient {
         int tailleFragMin = 5;
         List<List<KV>> ret = new ArrayList<>();
         int nbserv = utils.getNomsMachines(strfmt).size();
+        System.out.println("Répartition du fichier entre les machines de format "+strfmt);
+        System.out.println(nbserv + " machines trouvées");
         for(int i=0;i<nbserv;i++)
         {
             ret.add(new ArrayList<>());
