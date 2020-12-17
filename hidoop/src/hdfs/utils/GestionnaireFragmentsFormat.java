@@ -136,7 +136,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
                 lu = format_reel.read();
                 if(lu!=null)
                 {
-                    ((List<KV>)ret).add(lu);
+                    ((List<KV>)ret).add(new KV(lu.k,lu.v));
                 }
             }while(lu!=null);
             format_reel.close();

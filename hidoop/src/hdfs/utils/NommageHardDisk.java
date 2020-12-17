@@ -102,7 +102,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         List<InfoAdresse> dejaPresent = getAdressesFragments(nomFichier);
         dejaPresent.addAll(adressesFragments);
         supprimerAdressesFragment(nomFichier);
-        enregistrerFragments(dejaPresent,new File(nomFichier+".nommage"));
+        enregistrerFragments(dejaPresent,new File(directory + "/" +nomFichier+".nommage"));
     }
 
     @Override
