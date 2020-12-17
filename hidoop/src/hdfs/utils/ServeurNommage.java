@@ -1,5 +1,6 @@
 package hdfs.utils;
 
+import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
@@ -13,7 +14,7 @@ public class ServeurNommage {
             // Create an instance of the server object
             Nommage nommage = new NommageHardDisk(args[0]);
             // Register the object with the naming service
-            Naming.rebind("/serviceNommageFragments", nommage);
+            Naming.rebind("//"+ InetAddress.getLocalHost().getHostName()+":"+port+"/serviceNommageFragments", nommage);
             System.out.println(" bound in registry");
         } catch (Exception exc) {System.out.println(exc.getMessage()); }
     }
