@@ -77,6 +77,8 @@ public class HDFSUtils {
     public List<String> getNomsMachines(String ft)
     {
         List<Object> total = Arrays.asList(repertoire.keySet().toArray());
+        System.out.println("Machines totales :");
+        System.out.println(total.toString());
         List<String> retour = new ArrayList<>();
         for(Object nom_ : total)
         {

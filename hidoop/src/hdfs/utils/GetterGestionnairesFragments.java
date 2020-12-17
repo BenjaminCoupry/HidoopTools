@@ -56,6 +56,7 @@ public class GetterGestionnairesFragments {
                                 formats.put(nom,"Kv");
                             }
                         }
+                        System.out.println("serveur hdfs "+nom+"trouvé");
                         gestionnaires.put(nom, gf);
                     } catch (Exception exc) {
                         System.out.println(exc.getMessage());
