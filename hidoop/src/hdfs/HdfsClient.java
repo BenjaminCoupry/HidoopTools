@@ -105,6 +105,7 @@ public class HdfsClient {
     public static void HdfsRead(String hdfsFname, String localFSDestFname) {
         HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
         Object lu =  utils.Read(hdfsFname);
+        System.out.println("Lu de HDFS : "+lu.toString());
         if(lu instanceof List)
         {
             List<List<KV>> llkv = (List<List<KV>>) lu;

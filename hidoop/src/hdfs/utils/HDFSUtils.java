@@ -67,8 +67,10 @@ public class HDFSUtils {
         List<Object> retour = new ArrayList<>();
         try {
             List<InfoAdresse> infos = noms.getAdressesFragments(nomHDFS);
+            System.out.println("Les fragments voulus se situent aux lieux suivants : "+infos.toString());
             for(InfoAdresse i : infos)
             {
+                System.out.println("Recuperation du fragment "+i+" ...");
                 retour.add(recupererFragment(i));
             }
         }catch(Exception e){e.printStackTrace();}
