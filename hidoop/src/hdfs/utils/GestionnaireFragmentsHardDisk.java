@@ -148,7 +148,7 @@ public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implement
     }
 
     @Override
-    public String getDirectory() {
+    public String getDirectory() throws RemoteException {
         return directory;
     }
 }

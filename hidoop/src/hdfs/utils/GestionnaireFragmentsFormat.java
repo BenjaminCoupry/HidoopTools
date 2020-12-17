@@ -192,7 +192,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     @Override
-    public String getDirectory() {
+    public String getDirectory() throws RemoteException {
         return directory;
     }
 }

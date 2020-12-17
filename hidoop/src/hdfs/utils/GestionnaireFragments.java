@@ -14,5 +14,5 @@ public interface GestionnaireFragments extends Remote {
     String getNomNouveauFichier()throws RemoteException;
     void supprimerFragment(String nom)throws RemoteException;
     //@Nullable
-    String getDirectory();
+    String getDirectory() throws RemoteException;
 }

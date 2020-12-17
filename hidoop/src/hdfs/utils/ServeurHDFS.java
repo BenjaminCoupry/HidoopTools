@@ -13,7 +13,7 @@ public class ServeurHDFS {
     //args[3] fragment type
     public static void main(String args[]) {
         try {
-            int port = Integer.parseInt(args[2]);
+            int port = Integer.parseInt(args[1]);
             LocateRegistry.createRegistry(port);
             // Create an instance of the server object
             GestionnaireFragments frag;
