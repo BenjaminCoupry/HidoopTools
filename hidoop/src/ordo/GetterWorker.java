@@ -24,7 +24,7 @@ public class GetterWorker {
                     String port = spt[3];
                     try {
                         //récupérer le stub
-                        Worker w  = (Worker) Naming.lookup(adresse + ":" + port + "/serviceHidoop");
+                        Worker w  = (Worker) Naming.lookup("//" + adresse + ":" + port + "/serviceHidoop" + nom);
                         this.worker = w;
                         System.out.println("Serveur Hidoop " + nom + " trouvé !");
                     } catch (Exception exc) {

@@ -1,7 +1,5 @@
 package ordo;
 
-import java.rmi.RemoteException;
-
 import formats.*;
 import formats.Format.*;
 import map.*;
@@ -65,6 +63,11 @@ public class Job implements JobInterfaceX {
   public void startJob(MapReduce mr) {
     //récupérer les stubs
     HDFSUtils hdfsu = new HDFSUtils("../../config/adresses.txt");
+    GetterWorker gWorker = new GetterWorker("../../config/adresses.txt");
+    Worker worker = gWorker.getWorker();
+
+    //elements concurrences
+    Object mutex = new Object();
 
     try {
       //récupérer les adresses des fragments
@@ -85,10 +88,12 @@ public class Job implements JobInterfaceX {
         }
         Format writerMap = new KVFormatS(nomWriterMap);
         CallBack cb = new CallBack();
-        //créer les fragments traites
-        runMap(mr, readerMap, writerMap, cb);
-        //ajouter les fragments aux systemes
-        hdfsu.ajouterFragmentSysteme(info.getNomMachine(), nomWriterMap, mpfname);
+        synchronized (mutex) {
+          //traiter les fragments
+          worker.runMap(mr, readerMap, writerMap, cb);
+          //ajouter les fragments aux systemes
+          hdfsu.ajouterFragmentSysteme(info.getNomMachine(), nomWriterMap, mpfname);
+        }
       }
 
       //lire le nouveau fichier creer à partir des nouveaux fragments

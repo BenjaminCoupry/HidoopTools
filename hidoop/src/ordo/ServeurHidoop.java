@@ -8,7 +8,7 @@ public class ServeurHidoop {
   public static void main(String[] args) {
     //args[0] = adresse pour acceder au serveur Hidoop
     //args[1] = port
-    //args[2] nom de la machine
+    //args[2] = nom de la machine
 
     try {
       //récupérer le port sur laquelle on lance le registre RMI
@@ -17,8 +17,8 @@ public class ServeurHidoop {
       LocateRegistry.createRegistry(port);
       //créer l'objet serveur
       WorkerInterface worker = new Worker();
-      //Enregistrer l'objet dans le registre
-      Naming.rebind(args[0] + ":" + port + "/serviceHidoop" + args[2], worker);
+      //Enregistrer l'objet dans le registre "//" + args[0] + ":" + port + "/serviceHidoop" + args[2]
+      Naming.rebind("//" + args[0] + ":" + port + "/serviceHidoop" + args[2], worker);
       System.out.println(" bound in registry");
     } catch (Exception e) {
       e.printStackTrace();

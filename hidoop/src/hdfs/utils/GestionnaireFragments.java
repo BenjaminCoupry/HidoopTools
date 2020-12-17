@@ -1,6 +1,6 @@
 package hdfs.utils;
 
-import com.sun.istack.internal.Nullable;
+//import com.sun.istack.internal.Nullable;
 
 import java.io.Serializable;
 import java.rmi.Remote;
@@ -13,6 +13,6 @@ public interface GestionnaireFragments extends Remote {
     boolean fragmentExiste(String nom)throws RemoteException;
     String getNomNouveauFichier()throws RemoteException;
     void supprimerFragment(String nom)throws RemoteException;
-    @Nullable
+    //@Nullable
     String getDirectory();
 }

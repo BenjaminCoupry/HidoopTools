@@ -1,6 +1,6 @@
 package hdfs.utils;
 
-import com.sun.istack.internal.Nullable;
+//import com.sun.istack.internal.Nullable;
 import formats.Format;
 import formats.KV;
 import formats.KVFormat;
@@ -53,7 +53,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
         }
     }
 
-    @Nullable
+    //@Nullable
     private File getFichNom(String nomFichier)
     {
         List<File> inDir = getFichInDir();

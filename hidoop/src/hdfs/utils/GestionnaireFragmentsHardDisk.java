@@ -1,6 +1,6 @@
 package hdfs.utils;
 
-import com.sun.istack.internal.Nullable;
+//import com.sun.istack.internal.Nullable;
 
 import java.io.*;
 import java.rmi.RemoteException;
@@ -43,7 +43,7 @@ public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implement
         }
     }
 
-    @Nullable
+    //@Nullable
     private File getFichNom(String nomFichier)
     {
         List<File> inDir = getFichInDir();
