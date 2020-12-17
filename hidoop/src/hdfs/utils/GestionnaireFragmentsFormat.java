@@ -20,9 +20,6 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     Format.Type ft;
     private static final Pattern ext = Pattern.compile("(?<=.)\\.[^.]+$");
 
-    public Format.Type getFt() {
-        return ft;
-    }
 
     public GestionnaireFragmentsFormat(String directory, Format.Type f)throws RemoteException {
         this.directory = directory;
@@ -194,5 +191,18 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     @Override
     public String getDirectory() throws RemoteException {
         return directory;
+    }
+
+    @Override
+    public String getFormat() throws RemoteException {
+        if (ft.equals(Format.Type.KV))
+        {
+            return "Kv";
+        }
+        else if(ft.equals(Format.Type.LINE))
+        {
+            return "Line";
+        }
+        return null;
     }
 }

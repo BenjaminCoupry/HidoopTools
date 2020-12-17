@@ -44,20 +44,9 @@ public class GetterGestionnairesFragments {
                         GestionnaireFragments gf = (GestionnaireFragments) Naming.lookup(adresse + ":" + port + "/serviceHDFS"+nom);
                         System.out.println("type du gestionnaire de fragment :");
                         System.out.println(gf.toString());
-                        if(gf instanceof GestionnaireFragmentsHardDisk) {
-                            formats.put(nom,"HD");
-                        }else if(gf instanceof GestionnaireFragmentsFormat)
-                        {
-                            GestionnaireFragmentsFormat gff = (GestionnaireFragmentsFormat)gf;
-                            if(gff.getFt().equals(Format.Type.LINE))
-                            {
-                                formats.put(nom,"Line");
-                            }
-                            else if(gff.getFt().equals(Format.Type.KV))
-                            {
-                                formats.put(nom,"Kv");
-                            }
-                        }
+
+                        formats.put(nom,gf.getFormat());
+
                         System.out.println("serveur hdfs "+nom+" trouvé !");
                         gestionnaires.put(nom, gf);
                     } catch (Exception exc) {

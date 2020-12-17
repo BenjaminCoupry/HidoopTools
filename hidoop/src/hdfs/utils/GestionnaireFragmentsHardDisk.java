@@ -151,4 +151,9 @@ public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implement
     public String getDirectory() throws RemoteException {
         return directory;
     }
+
+    @Override
+    public String getFormat() throws RemoteException {
+        return "HD";
+    }
 }
