@@ -52,14 +52,15 @@ public class HdfsClient {
                 fichLoc.add(new KV(lu.k,lu.v));
             }
         }while(lu!=null);
+        String format_HDFS = "Kv";
         format_reel.close();
         System.out.println("Fichier local lu");
         System.out.println(fichLoc.toString());
-        List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
+        List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,format_HDFS);
         System.out.println("Decoupage en "+frags.size()+" fragments");
         System.out.println(frags.toString());
 
-        utils.Write(Paths.get(localFSSourceFname).getFileName().toString(),frags,strFmt);
+        utils.Write(Paths.get(localFSSourceFname).getFileName().toString(),frags,format_HDFS);
     }
 
     private static List<List<KV>> Splitter(List<KV> lkv, int repet, HDFSUtils utils, String strfmt)

@@ -72,8 +72,10 @@ public class HDFSUtils {
             {
                 System.out.println("Recuperation du fragment "+i+" ...");
                 retour.add(recupererFragment(i));
+                System.out.println("Recuperation du fragment "+i+" OK !");
             }
         }catch(Exception e){e.printStackTrace();}
+
         return retour;
     }
 
