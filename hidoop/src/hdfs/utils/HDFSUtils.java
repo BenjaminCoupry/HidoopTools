@@ -46,7 +46,7 @@ public class HDFSUtils {
     //Ajoute la liste de fragments frags au systeme (fichier et nommage) sous le nom nomHDFS
     public void Write(String nomHDFS, List<List<KV>> frags, String ft)
     {
-        System.out.println("ecriture d'oobjet dans HDFS");
+        System.out.println("ecriture d'objet dans HDFS");
         List<String> machines = getNomsMachines(ft);
         int n = 0;
         for(List<KV> o : frags)
@@ -137,13 +137,15 @@ public class HDFSUtils {
     //Ajoute le fragment frag au systeme HDFS (et au rep de nommage) pour le fichier nomHDFS, et ce sur la machine précisée
     public void ajouterFragmentSysteme(String nomHDFS,String machine, Serializable frag) throws RemoteException
     {
-        System.out.println("ajout d'un fragment de "+nomHDFS +"au systeme sur la machine "+machine);
+        System.out.println("ajout d'un fragment de "+nomHDFS +" au systeme sur la machine "+machine);
 
         GestionnaireFragments gest = repertoire.get(machine);
         System.out.println("gestionnaire de fragments obtenu");
         String nom = gest.ecrireFragment(frag);
+        System.out.println("Generation des infos adresse du fragment");
+        System.out.println("--------------------------");
         InfoAdresse info = new AdresseFrag(machine,nom, nomHDFS);
-        System.out.println("Ecriture de : "+ info.afficher());
+        System.out.println("Ecriture Info Adresse : "+ info.afficher());
         noms.enregistrerAdresseFragment(nomHDFS,info);
     }
 
