@@ -7,6 +7,7 @@ import formats.KVFormat;
 import formats.LineFormat;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -54,12 +55,13 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     //@Nullable
     private File getFichNom(String nomFichier)
     {
-        System.out.println("recherche du fichier "+nomFichier);
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
-            if(getFileNameWithoutExtension(nf).equals(nomFichier))
+            String pathSolo = Paths.get(nf.getName()).getFileName().toString();
+            if(pathSolo.equals(nomFichier+".fragment"))
             {
+                System.out.println("fichier de nommage trouvé");
                 return nf;
             }
         }
@@ -77,6 +79,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
 
     @Override
     public Object lireFragment(String nom) {
+        System.out.println("Lecture du fragment "+nom);
         return lireFragment(getFichNom(nom));
     }
 
@@ -114,6 +117,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
 
     private Object lireFragment(File f)
     {
+        System.out.println("Lecture du fichier "+f.toString());
         Object ret = null;
         try {
             ret = new ArrayList<KV>();
