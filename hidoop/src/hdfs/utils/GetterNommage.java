@@ -27,7 +27,7 @@ public class GetterNommage {
                     String port = spt[3];
                     try {
                         // get the stub of the server object from the rmiregistry
-                        Nommage nm  = (Nommage) Naming.lookup(adresse+":"+port+"/serviceNommageFragments");
+                        Nommage nm  = (Nommage) Naming.lookup("//"+adresse+":"+port+"/serviceNommageFragments");
                         nommage = nm;
                         System.out.println("Serveur de nommage "+nom+" trouvé !");
                     } catch (Exception exc) {
