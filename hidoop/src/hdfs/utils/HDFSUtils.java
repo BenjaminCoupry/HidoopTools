@@ -76,10 +76,11 @@ public class HDFSUtils {
     //Renvoie la liste des machines de HDFS
     public List<String> getNomsMachines(String ft)
     {
-        List<String> total = (List<String>) repertoire.keySet();
+        List<Object> total = Arrays.asList(repertoire.keySet().toArray());
         List<String> retour = new ArrayList<>();
-        for(String nom : total)
+        for(Object nom_ : total)
         {
+            String nom = (String)nom_;
             if(formats.get(nom).equals(ft))
             {
                 retour.add(nom);
