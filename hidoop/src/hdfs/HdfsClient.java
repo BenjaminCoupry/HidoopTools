@@ -52,7 +52,7 @@ public class HdfsClient {
         }while(lu!=null);
         format_reel.close();
         System.out.println("Fichier local lu");
-        System.out.println(lu.toString());
+        System.out.println(fichLoc.toString());
         List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
         System.out.println("Decoupage en "+frags.size()+" fragments");
         System.out.println(frags.toString());
