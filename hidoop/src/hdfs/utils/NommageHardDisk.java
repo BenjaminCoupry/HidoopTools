@@ -3,6 +3,7 @@ package hdfs.utils;
 //import com.sun.istack.internal.Nullable;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
-            if(nf.equals(nomFichier+".nommage"))
+            if(Paths.get(nf.getName()).getFileName().equals(nomFichier+".nommage"))
             {
                 System.out.println("fichier de nommage trouvé");
                 return nf;
