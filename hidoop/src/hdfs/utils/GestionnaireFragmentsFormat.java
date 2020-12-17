@@ -59,7 +59,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
         for(File nf : inDir)
         {
             String pathSolo = Paths.get(nf.getName()).getFileName().toString();
-            if(pathSolo.equals(nomFichier+".fragment"))
+            if(pathSolo.equals(nomFichier))
             {
                 System.out.println("fichier de nommage trouvé");
                 return nf;
