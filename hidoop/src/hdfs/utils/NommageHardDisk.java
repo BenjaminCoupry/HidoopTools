@@ -50,7 +50,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
-            if(getFileNameWithoutExtension(nf).equals(getFileNameWithoutExtension(new File(nomFichier))))
+            if(nf.equals(nomFichier+".frag"))
             {
                 return nf;
             }
@@ -75,6 +75,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
 
     @Override
     public List<InfoAdresse> getAdressesFragments(String nomFichier)throws RemoteException {
+        System.out.println("Recuperation des addresses du fichier "+nomFichier);
         File fich = getFichNom(nomFichier);
         List<InfoAdresse> ret = new ArrayList<>();
         if(fich != null)
