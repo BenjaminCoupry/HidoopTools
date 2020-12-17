@@ -33,12 +33,12 @@ public class HdfsClient {
         if (fmt.equals(Format.Type.KV))
         {
             format_reel = new KVFormat(localFSSourceFname);
-            strFmt = "Line";
+            strFmt = "Kv";
         }
         else if(fmt.equals(Format.Type.LINE))
         {
             format_reel = new LineFormat(localFSSourceFname);
-            strFmt = "Kv";
+            strFmt = "Line";
         }
         format_reel.open(Format.OpenMode.R);
         KV lu;
