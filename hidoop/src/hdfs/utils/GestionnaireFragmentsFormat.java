@@ -23,6 +23,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
 
     public GestionnaireFragmentsFormat(String directory, Format.Type f)throws RemoteException {
         this.directory = directory;
+        ft = f;
     }
 
     public static String getFileNameWithoutExtension(File file) {
