@@ -69,7 +69,8 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     @Override
     public String ecrireFragment(Serializable contenu) {
         String nom = getNomNouveauFichier()+".fragment";
-        enregistrerFragment(contenu,new File(nom));
+        System.out.println("nom "+nom+" obtenu");
+        enregistrerFragment(contenu,new File(directory+"/"+ nom));
         return nom;
     }
 
@@ -99,6 +100,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             format_reel.open(Format.OpenMode.W);
             for(KV kv : kvs)
             {
+                System.out.println("Ecriture de la KV "+kv.toString());
                 format_reel.write(kv);
             }
             format_reel.close();

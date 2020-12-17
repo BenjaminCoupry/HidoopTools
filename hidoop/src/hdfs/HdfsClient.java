@@ -51,6 +51,8 @@ public class HdfsClient {
         }while(lu!=null);
         format_reel.close();
         List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
+        System.out.println("Decoupage en "+frags.size()+" fragments");
+        System.out.println(frags.toString());
         utils.Write(localFSSourceFname,frags,strFmt);
     }
 
