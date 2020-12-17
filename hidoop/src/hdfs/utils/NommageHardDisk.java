@@ -67,7 +67,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
             out.writeObject(frags);
             out.close();
             fileOut.close();
-            System.out.printf("Serialized data is saved");
+            System.out.println("Serialized data is saved");
         } catch (IOException i) {
             i.printStackTrace();
         }
@@ -107,10 +107,12 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
 
     @Override
     public void enregistrerAdresseFragment(String nomFichier, InfoAdresse adresseFragment)throws RemoteException {
+        System.out.println("Enregistrement de l'adresse d'un fragment");
         List<InfoAdresse> dejaPresent = getAdressesFragments(nomFichier);
         dejaPresent.add(adresseFragment);
         supprimerAdressesFragment(nomFichier);
-        enregistrerFragments(dejaPresent,new File(nomFichier+".nommage"));
+        System.out.println("Mise a jour de "+directory + "/" +nomFichier+".nommage");
+        enregistrerFragments(dejaPresent,new File(directory + "/" +nomFichier+".nommage"));
     }
 
     @Override

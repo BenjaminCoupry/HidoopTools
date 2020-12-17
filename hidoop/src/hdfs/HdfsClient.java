@@ -8,6 +8,8 @@ import formats.KVFormat;
 import formats.LineFormat;
 import hdfs.utils.HDFSUtils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,8 @@ public class HdfsClient {
         List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,strFmt);
         System.out.println("Decoupage en "+frags.size()+" fragments");
         System.out.println(frags.toString());
-        utils.Write(localFSSourceFname,frags,strFmt);
+
+        utils.Write(Paths.get(localFSSourceFname).getFileName().toString(),frags,strFmt);
     }
 
     private static List<List<KV>> Splitter(List<KV> lkv, int repet, HDFSUtils utils, String strfmt)
