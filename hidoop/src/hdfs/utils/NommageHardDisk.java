@@ -50,7 +50,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
-            if(nf.equals(nomFichier+".frag"))
+            if(nf.equals(nomFichier+".nommage"))
             {
                 return nf;
             }
