@@ -54,6 +54,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     //@Nullable
     private File getFichNom(String nomFichier)
     {
+        System.out.println("recherche du fichier "+nomFichier);
         List<File> inDir = getFichInDir();
         for(File nf : inDir)
         {
