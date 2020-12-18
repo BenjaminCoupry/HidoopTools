@@ -2,14 +2,16 @@ package ordo;
 
 import java.io.*;
 import java.rmi.Naming;
-import java.util.Scanner;
+import java.util.*;
 
 public class GetterWorker {
 
-    private Worker worker;
+    private HashMap<String, WorkerInterface> workers;
 
     public GetterWorker(String configuration) {
         File config = new File(configuration);
+        this.workers = new HashMap<String, WorkerInterface>();
+
         try {
             FileInputStream fis = new FileInputStream(config);
             Scanner sc = new Scanner(fis);    //fichier à lire
@@ -17,18 +19,19 @@ public class GetterWorker {
             while(sc.hasNextLine())
             {
                 String ligne = sc.nextLine();   //la ligne que l'on vient de lire
-                String[] spt = ligne.split(" ");
+                String[] spt = ligne.split(" ");                
                 if(spt[0].equals("Hidoop")) {
                     String nom = spt[1];
                     String adresse = spt[2];
                     String port = spt[3];
                     try {
                         //récupérer le stub
-                        Worker w  = (Worker) Naming.lookup("//" + adresse + ":" + port + "/serviceHidoop" + nom);
-                        this.worker = w;
+                        WorkerInterface w  = (WorkerInterface) Naming.lookup("//" + adresse + ":" + port + "/serviceHidoop" + nom);
+                        this.workers.put(nom, w);
                         System.out.println("Serveur Hidoop " + nom + " trouvé !");
                     } catch (Exception exc) {
                         System.out.println(exc.getMessage());
+                        exc.printStackTrace();
                     }
                     break;
                 }
@@ -39,7 +42,7 @@ public class GetterWorker {
         }
     }
 
-    public Worker getWorker() {
-        return this.worker;
+    public WorkerInterface getWorker(String nomMachine) {
+        return this.workers.get(nomMachine);
     }
 }

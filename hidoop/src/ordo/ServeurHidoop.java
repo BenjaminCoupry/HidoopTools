@@ -17,7 +17,7 @@ public class ServeurHidoop {
       LocateRegistry.createRegistry(port);
       //créer l'objet serveur
       WorkerInterface worker = new Worker();
-      //Enregistrer l'objet dans le registre "//" + args[0] + ":" + port + "/serviceHidoop" + args[2]
+      //Enregistrer l'objet dans le registre
       Naming.rebind("//" + args[0] + ":" + port + "/serviceHidoop" + args[2], worker);
       System.out.println(" bound in registry");
     } catch (Exception e) {

@@ -52,7 +52,7 @@ public class HdfsClient {
                 fichLoc.add(new KV(lu.k,lu.v));
             }
         }while(lu!=null);
-        String format_HDFS = "Kv";
+        String format_HDFS = "Line";
         format_reel.close();
         System.out.println("Fichier local lu");
         System.out.println(fichLoc.toString());
