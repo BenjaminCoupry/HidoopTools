@@ -5,6 +5,7 @@ import formats.Format.*;
 import map.*;
 import hdfs.utils.*;
 import hdfs.*;
+
 import java.util.*;
 
 import config.Project;
@@ -73,6 +74,8 @@ public class Job implements JobInterfaceX {
     //récupérer les stubs
     HDFSUtils hdfsu = new HDFSUtils(Project.PATH_CONFIG);
     GetterWorker gWorker = new GetterWorker(Project.PATH_CONFIG);
+    GetterNommage gNommage = new GetterNommage(Project.PATH_CONFIG);
+    Nommage nommage = gNommage.getNommage();
 
     //elements concurrences
     Object mutex = new Object();
@@ -81,16 +84,19 @@ public class Job implements JobInterfaceX {
       //recuperer les adresses des fragments
       List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.inFname);
 
-      // nom du fichier traite
+      //nom du fichier traite
       String mpfname = "res-" + this.inFname;
+
+      //liste des adresses des nouveaux fragments
+      List<InfoAdresse> newAdresses = new LinkedList<InfoAdresse>();
 
       //traiter les fragments
       for (InfoEtendue info : adresses) {
         //recuperer le nom de la machine
         String nomMachine = info.getNomMachine();
         // recuperer le nom du fichier
-        String nomReaderMap = info.getRepertoire() + "/" + info.getNomLocal();
-        String nomWriterMap = "res-" + info.getNomLocal();
+        String nomReaderMap = info.getRepertoire() + info.getNomLocal();
+        String nomWriterMap = info.getRepertoire() + "res-" + info.getNomLocal();
         Format readerMap;
         if (this.inFormat == Type.KV) {
           readerMap = new KVFormatS(nomReaderMap);
@@ -105,10 +111,13 @@ public class Job implements JobInterfaceX {
           //traiter les fragments
           System.out.println("JOB : runMap() de " + nomReaderMap + " a " + nomWriterMap);
           worker.runMap(mr, readerMap, writerMap, cb);
-          //ajouter les fragments aux systemes
-          hdfsu.ajouterFragmentSysteme(mpfname, info.getNomMachine(), );
+          //ajouter les nouvelles adresses à la liste
+          newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
         }
       }
+
+      //ajouter les fragments au serveur de nommage
+      nommage.enregistrerAdressesFragments(mpfname, newAdresses);    
 
       //lire le nouveau fichier creer à partir des nouveaux fragments
       String nomReaderRed = "loc-" + mpfname;
@@ -124,9 +133,9 @@ public class Job implements JobInterfaceX {
         writerRed = new LineFormatS(this.outFname);
       }
 
-      System.out.println("JOB : reduce() de " + readerRed + " dans " + writerRed);
-      readerRed.open(Format.OpenMode.R);
-      writerRed.open(Format.OpenMode.W);
+      System.out.println("JOB : reduce() de " + nomReaderRed + " dans " + this.outFname);
+      readerRed.open(OpenMode.R);
+      writerRed.open(OpenMode.W);
       mr.reduce(readerRed, writerRed);
       readerRed.close();
       writerRed.close();

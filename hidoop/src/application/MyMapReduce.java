@@ -33,10 +33,11 @@ public class MyMapReduce implements MapReduce {
         HashMap<String,Integer> hm = new HashMap<>();
         KV kv;
         while ((kv = reader.read()) != null) {
+            System.out.println(kv.k + " " + kv.v);
             if (hm.containsKey(kv.k)) hm.put(kv.k, hm.get(kv.k)+Integer.parseInt(kv.v));
             else hm.put(kv.k, Integer.parseInt(kv.v));
         }
-        for (String k : hm.keySet()) writer.write(new KV(k,hm.get(k).toString()));
+        for (String k : hm.keySet())  writer.write(new KV(k,hm.get(k).toString()));
     }
 
     public static void main(String args[]) {
