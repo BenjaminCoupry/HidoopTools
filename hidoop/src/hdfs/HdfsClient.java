@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class HdfsClient {
 
@@ -20,19 +21,24 @@ public class HdfsClient {
         System.out.println("Usage: java HdfsClient write <line|kv> <file>");
         System.out.println("Usage: java HdfsClient delete <file>");
     }
-	
+
+    //Supprimer le fichier de nom hdfs hdfsFname de HDFS
     public static void HdfsDelete(String hdfsFname) {
+        //Recuperer l'utilitaire
         HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
+        //Supprimer de HDFS le fichier
         utils.Delete(hdfsFname);
     }
-	
+	//Copier un fichier local de chemin localFSSourceFname et de format fmt dans HDFS
     public static void HdfsWrite(Format.Type fmt, String localFSSourceFname, 
      int repFactor) {
+        //Initialiser ce qui recevra les KV du fichier local
         List<KV> fichLoc = new ArrayList<>();
-
+        //Initialiser l'utilitaire
         HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
         Format format_reel = null;
         String strFmt = "";
+        //Recuperation du format pour lire le fichier
         if (fmt.equals(Format.Type.KV))
         {
             format_reel = new KVFormat(localFSSourceFname);
@@ -52,33 +58,44 @@ public class HdfsClient {
                 fichLoc.add(new KV(lu.k,lu.v));
             }
         }while(lu!=null);
-        String format_HDFS = "Line";
+        //Format pour enregistrer dans HDFS
+        String format_HDFS = "Kv";
+        //Fermer le format de lecture
         format_reel.close();
         System.out.println("Fichier local lu");
-        System.out.println(fichLoc.toString());
+        //Decouper en fragments
         List<List<KV>> frags = Splitter(fichLoc,repFactor,utils,format_HDFS);
-        System.out.println("Decoupage en "+frags.size()+" fragments");
-        System.out.println(frags.toString());
-
-        utils.Write(Paths.get(localFSSourceFname).getFileName().toString(),frags,format_HDFS);
+        //Generer un nom hdfs
+        String nomHDFS = Paths.get(localFSSourceFname).getFileName().toString();
+        //enregistrer e fichier HDFS
+        System.out.println("Le fichier local "+localFSSourceFname + " va etre enregistré dans HDFS sous le nom "+ nomHDFS);
+        System.out.println("Ce fichier est composé de "+frags.size()+"fragments.");
+        utils.Write(nomHDFS,frags,format_HDFS);
+        System.out.println(""+localFSSourceFname + " ===> "+ nomHDFS+" : OK !");
     }
 
+    //Decoupe une List<KV> en List<List<KV>> , avec une redondance de repet, avec autant de fragments que
+    // de serveurs correspondant au format specifie
     private static List<List<KV>> Splitter(List<KV> lkv, int repet, HDFSUtils utils, String strfmt)
     {
+        //La taille minimale en KV d'un fragment
         int tailleFragMin = 5;
+        //Initialiser la liste de fragments qui sera renvoyée
         List<List<KV>> ret = new ArrayList<>();
+        //Recevoir le nombre de machines correspondant au format spécifié
         int nbserv = utils.getNomsMachines(strfmt).size();
-        System.out.println("Répartition du fichier entre les machines de format "+strfmt);
-        System.out.println(nbserv + " machines trouvées");
+        //Initialiser les fragments
         for(int i=0;i<nbserv;i++)
         {
             ret.add(new ArrayList<>());
         }
-        int i=0;
+        //Initialisation
+        int i= 0;
         for(KV kv : lkv)
         {
             for(int j=0;j<repet;j++)
             {
+                //Parcourir toutes les machines succesivement
                 ret.get(i%nbserv).add(kv);
                 i++;
             }
@@ -88,6 +105,7 @@ public class HdfsClient {
         List<KV> setup = new ArrayList<>();
         for(List<KV> lkv2 : ret)
         {
+            //Aggreger les fragments jusqu a obtenir une taille satisfaisante
             setup.addAll(lkv2);
             if(setup.size()>=tailleFragMin)
             {
@@ -103,22 +121,31 @@ public class HdfsClient {
         return ret2;
     }
 
+    //Lire le fichier HDFS de nom hdfsFname et l'enregistrer sous forme de KV
+    // localement dans le repertoire localFSDestFname
     public static void HdfsRead(String hdfsFname, String localFSDestFname) {
+        //Initialiser les utils
         HDFSUtils utils = new HDFSUtils(Project.PATH_CONFIG);
+        //Lire la liste des fragments
         Object lu =  utils.Read(hdfsFname);
-        System.out.println("Lu de HDFS : "+lu.toString());
         if(lu instanceof List)
         {
+            //Lu est une liste de fragments
             List<List<KV>> llkv = (List<List<KV>>) lu;
+            //On decide d'ecrire localement en KV
             Format format_reel = new KVFormat(localFSDestFname);
+            //Ce sera une ecriture
             format_reel.open(Format.OpenMode.W);
             for(List<KV> lkv : llkv)
             {
+                //Ecrire tous les fragments
                 for(KV kv : lkv)
                 {
+                    //Ecrire toutes les KV du fragment
                     format_reel.write(kv);
                 }
             }
+            //Fermer le format
             format_reel.close();
         }
     }

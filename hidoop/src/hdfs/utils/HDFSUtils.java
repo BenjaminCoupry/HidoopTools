@@ -14,11 +14,17 @@ public class HDFSUtils {
 
     public HDFSUtils(String config)
     {
+        System.out.println("Initialisation d'un utilitaire HDFS");
+        //Creer le recuperateur de nommage
         GetterNommage GN = new GetterNommage(config);
+        //Creer le recuperateur de gestionnaire de fragments
         GetterGestionnairesFragments GF = new GetterGestionnairesFragments(config);
+        //Recuperer le nommage
         noms = GN.getNommage();
+        //Recuperer les formats des serveurs
         formats = GF.getFormats();
         configuration = config;
+        //Recuperer les gestionnaires de fragments
         repertoire = GF.getGestionnaires();
     }
 
@@ -26,14 +32,16 @@ public class HDFSUtils {
     //Supprime le fichier nomHDFS du repertoire et des machines
     public void Delete(String nomHDFS)
     {
+        System.out.println("Tentative de suppression HDFS de "+nomHDFS);
         try{
-            //Recuperer les adresses des blocs
+            //Recuperer les adresses des blocs correspondant au nomHDFS
             List<InfoAdresse> blocs = noms.getAdressesFragments(nomHDFS);
             //Supprimer les blocs de la convention de nommage
+            System.out.println("Suppression des informations de nommage de  : "+ nomHDFS);
             noms.supprimerAdressesFragment(nomHDFS);
             for(InfoAdresse i : blocs)
             {
-                System.out.println("Suppression de  : "+ i.afficher());
+                System.out.println("Suppression des fragments HDFS  : "+ i.afficher());
                 if(i.getNomFichierComplet().equals(nomHDFS)) {
                     //Supprimer le fragment
                     repertoire.get(i.getNomMachine()).supprimerFragment(i.getNomLocal());
@@ -46,14 +54,20 @@ public class HDFSUtils {
     //Ajoute la liste de fragments frags au systeme (fichier et nommage) sous le nom nomHDFS
     public void Write(String nomHDFS, List<List<KV>> frags, String ft)
     {
-        System.out.println("ecriture d'objet dans HDFS");
+        System.out.println("Tentative d'ecriture HDFS de "+nomHDFS);
+        //Recuperer les noms des machines capables de gerer le format fourni
         List<String> machines = getNomsMachines(ft);
-        int n = 0;
+        Random r = new Random();
+        //Initialiser sur une des machines
+        int n = r.nextInt(machines.size());;
+        //Parcourir les fragments
         for(List<KV> o : frags)
         {
             System.out.println("ecriture du fragment "+o);
             try {
+                //Recuperer le nom de la machine n
                 String machine = machines.get(n % machines.size());
+                //Ajouter le fragment o a la machine n
                 ajouterFragmentSysteme(nomHDFS,machine, (Serializable) o);
                 n++;
             }catch(Exception e){e.printStackTrace();}
@@ -64,37 +78,41 @@ public class HDFSUtils {
     //Renvoie la liste des fragments composant le fichier nomHDFS
     public List<Object> Read(String nomHDFS)
     {
+        System.out.println("Tentative de lecture HDFS de "+nomHDFS);
+        //Initialiser la liste des fragments de retour
         List<Object> retour = new ArrayList<>();
         try {
+            //Recuperer la liste des infos pour trouver les fragments
             List<InfoAdresse> infos = noms.getAdressesFragments(nomHDFS);
             System.out.println("Les fragments voulus se situent aux lieux suivants : "+infos.toString());
             for(InfoAdresse i : infos)
             {
                 System.out.println("Recuperation du fragment "+i+" ...");
+                //Recuperer le fragment correspondant a l'info adresse i
                 retour.add(recupererFragment(i));
-                System.out.println("Recuperation du fragment "+i+" OK !");
+                System.out.println("Recuperation du fragment OK !");
             }
         }catch(Exception e){e.printStackTrace();}
 
         return retour;
     }
 
-    //Renvoie la liste des machines de HDFS
+    //Renvoie la liste des machines de HDFS gerant le format specifie
     public List<String> getNomsMachines(String ft)
     {
-        System.out.println("Recherche....");
-        System.out.println(ft);
+        System.out.println("Recherche des machines HDFS au format "+ft);
+        //Recuperer le nom des machines dans leur entierete
         List<Object> total = Arrays.asList(repertoire.keySet().toArray());
-        System.out.println("Machines  HDFS totales :");
-        System.out.println(total.toString());
-        System.out.println("types formats machines :");
-        System.out.println(formats.toString());
         List<String> retour = new ArrayList<>();
         for(Object nom_ : total)
         {
             String nom = (String)nom_;
-            if(formats.get(nom).equals(ft))
+            //Recuperer le format que gere la machine
+            String formatmachine = formats.get(nom);
+            //Comparer avec le format souhaite
+            if(formatmachine.equals(ft))
             {
+                //Ajouter le nom de la machine au resultat
                 retour.add(nom);
             }
         }
@@ -105,19 +123,26 @@ public class HDFSUtils {
     //Recupere le fragment associé à l'InfoAdresse donnée
     public Object recupererFragment(InfoAdresse info) throws RemoteException
     {
-        System.out.println("Lecture de : "+ info.afficher());
-        //SRecuperer le fragment
-        Object ob = repertoire.get(info.getNomMachine()).lireFragment(info.getNomLocal());
+        System.out.println("Recuperation du fragment associe a l'information  : "+ info.afficher());
+        //Recuperer le nom de la machine stockant le fragment
+        String nomMachine = info.getNomMachine();
+        //Recuperer le gestionnaire de fragments de cette machine
+        GestionnaireFragments gf = repertoire.get(nomMachine);
+        //Recuperer le nom du fichier contenant le fragment sur la machine en question
+        String nomLocalFragment = info.getNomLocal();
+        //Lire ce fragment distant
+        Object ob = gf.lireFragment(nomLocalFragment);
         return ob;
     }
 
     //Retourne l'IP de la machine ou est stockee l'info
     public String getIPMachineHDFS(InfoAdresse info) throws FileNotFoundException
     {
+        //Recuperer le nom de la machine
         String machine = info.getNomMachine();
+        //Lire le fichier de configuration
         FileInputStream fis=new FileInputStream(configuration);
-        Scanner sc =new Scanner(fis);    //file to be scanned
-        //returns true if there is another line to read
+        Scanner sc =new Scanner(fis);
         while(sc.hasNextLine())
         {
             String ligne = sc.nextLine();   //returns the line that was skipped
@@ -142,14 +167,14 @@ public class HDFSUtils {
     public void ajouterFragmentSysteme(String nomHDFS,String machine, Serializable frag) throws RemoteException
     {
         System.out.println("ajout d'un fragment de "+nomHDFS +" au systeme sur la machine "+machine);
-
+        //Recuperer le gestionnaire de fragment associé a la machine donnée en argument
         GestionnaireFragments gest = repertoire.get(machine);
-        System.out.println("gestionnaire de fragments obtenu");
+        //Le frahment est enregistré par le gestionnaire sous le nom donné
         String nom = gest.ecrireFragment(frag);
         System.out.println("Generation des infos adresse du fragment");
-        System.out.println("--------------------------");
+        //On pack les infos
         InfoAdresse info = new AdresseFrag(machine,nom, nomHDFS);
-        System.out.println("Ecriture Info Adresse : "+ info.afficher());
+        //Ajout des infos de ce fragment au sserveur de nommage
         noms.enregistrerAdresseFragment(nomHDFS,info);
     }
 
@@ -158,11 +183,18 @@ public class HDFSUtils {
     public List<InfoEtendue> getAdressesFragments(String nomFichierHDFS) throws RemoteException, FileNotFoundException
     {
         List<InfoEtendue> retour = new ArrayList<>();
-        for(InfoAdresse inf : noms.getAdressesFragments(nomFichierHDFS))
+        //Recuperer la liste des infos correspondant au fichier HDFS spécifié
+        List<InfoAdresse> LI =  noms.getAdressesFragments(nomFichierHDFS);
+        //Parcourir les infos
+        for(InfoAdresse inf :LI)
         {
+            //Recuperer l'IP de la machine ou est stocke le fragment
             String ip = getIPMachineHDFS(inf);
+            //Recuperer le gestionnaire de fragment de cette machine
             GestionnaireFragments gf = repertoire.get(inf.getNomMachine());
+            //Obtenir le repertoire de travail de ce gestionnaire
             String dir = gf.getDirectory();
+            //Pack les infos et les ajouter au resultat
             retour.add(new InfoEtendue(inf,ip,dir));
         }
         return retour;

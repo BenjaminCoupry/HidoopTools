@@ -45,6 +45,7 @@ public class NommageHardDisk extends UnicastRemoteObject implements Nommage{
     }
 
     //@Nullable
+    //Recuperer le fichier de nommage correspondant au fichier HDFS nomFichier
     private File getFichNom(String nomFichier)
     {
         List<File> inDir = getFichInDir();

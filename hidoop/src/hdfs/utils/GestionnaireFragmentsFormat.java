@@ -31,6 +31,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
         return ext.matcher(file.getName()).replaceAll("");
     }
 
+    //Recupere tous les fichiers de type .fragment du repertoire de travail
     private List<File> getFichInDir()
     {
         File[] folder = new File(directory).listFiles();
@@ -53,6 +54,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     //@Nullable
+    //Recupere le fichier du fragment a partir du nom du fragment (sans extension)
     private File getFichNom(String nomFichier)
     {
         List<File> inDir = getFichInDir();
@@ -61,7 +63,6 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             String pathSolo = Paths.get(nf.getName()).getFileName().toString();
             if(pathSolo.equals(nomFichier))
             {
-                System.out.println("fichier de nommage trouvé");
                 return nf;
             }
         }
@@ -69,24 +70,25 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     //contenu doit etre une liste de KV
+    //Ecrit dans un nouveau fichier le fragment fourni
     @Override
     public String ecrireFragment(Serializable contenu) {
         String nom = getNomNouveauFichier()+".fragment";
-        System.out.println("nom "+nom+" obtenu");
         enregistrerFragment(contenu,new File(directory+"/"+ nom));
         return nom;
     }
 
     @Override
+    //Recupere le fragment a partir du nom du fragment (sans extension)
     public Object lireFragment(String nom) {
-        System.out.println("Lecture du fragment "+nom);
         return lireFragment(getFichNom(nom));
     }
 
-    private void enregistrerFragment(Serializable frags , File f)
+    //Enregistre un fragment dans un fichier fourni
+    private void enregistrerFragment(Serializable frag , File f)
     {
         try {
-            List<KV> kvs = (List<KV>)frags;
+            List<KV> kvs = (List<KV>)frag;
             Format format_reel;
             if (ft.equals(Format.Type.KV))
             {
@@ -104,20 +106,17 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             format_reel.open(Format.OpenMode.W);
             for(KV kv : kvs)
             {
-                System.out.println("Ecriture de la KV "+kv.toString());
                 format_reel.write(kv);
             }
             format_reel.close();
-
-            System.out.printf("Serialized data is saved");
         } catch (IOException i) {
             i.printStackTrace();
         }
     }
 
+    //Retourne une liste de fragments lue dans un fichier
     private Object lireFragment(File f)
     {
-        System.out.println("Lecture du fichier "+f.toString());
         Object ret = null;
         try {
             ret = new ArrayList<KV>();
@@ -146,7 +145,6 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
             }while(lu!=null);
             format_reel.close();
 
-            System.out.printf("Serialized data is saved");
         } catch (IOException i) {
             i.printStackTrace();
         }
@@ -154,6 +152,8 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     @Override
+    //Indique si un fragment est stocke dans le repertoire de travail
+    // a partir du nom du fragment (sans extension)
     public boolean fragmentExiste(String nom) {
         File f = getFichNom(nom);
         if(f!= null)
@@ -167,6 +167,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     @Override
+    //Genere un nom de fichier sans extension inutilisé
     public String getNomNouveauFichier() {
         int num = 0;
         int max =0;
@@ -188,6 +189,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     @Override
+    // supprime un fragment a partir du nom du fragment (sans extension)
     public void supprimerFragment(String nom) {
         File f = getFichNom(nom);
         if(f!= null)

@@ -8,7 +8,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-
+@Deprecated
 public class GestionnaireFragmentsHardDisk extends UnicastRemoteObject implements GestionnaireFragments{
     String directory;
 
