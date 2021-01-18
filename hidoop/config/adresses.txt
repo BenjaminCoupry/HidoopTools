@@ -1,3 +1,5 @@
 Nommage nom 127.0.0.1 7890
 HDFS_Server n1 127.0.0.1 3067
+HDFS_Server n2 127.0.0.1 3068
 Hidoop n1 127.0.0.1 2889
+Hidoop n2 127.0.0.1 2890
