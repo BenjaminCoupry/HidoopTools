@@ -13,6 +13,7 @@ public class ServeurNommage {
             LocateRegistry.createRegistry(port);
             // Create an instance of the server object
             Nommage nommage = new NommageHardDisk(args[0]);
+            System.out.println(InetAddress.getLocalHost().getHostName());
             // Register the object with the naming service
             Naming.rebind("//"+ InetAddress.getLocalHost().getHostName()+":"+port+"/serviceNommageFragments", nommage);
             System.out.println(" bound in registry");
