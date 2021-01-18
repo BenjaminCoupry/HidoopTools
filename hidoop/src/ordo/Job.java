@@ -17,6 +17,7 @@ public class Job implements JobInterfaceX {
   private Type outFormat;
   private String outFname;
   private String inFname;
+  static Thread[] activites;
 
   public Job(String inFname, Format.Type inFormat, Format.Type outFormat) {
     this.inFname = inFname;
@@ -77,9 +78,6 @@ public class Job implements JobInterfaceX {
     GetterNommage gNommage = new GetterNommage(Project.PATH_CONFIG);
     Nommage nommage = gNommage.getNommage();
 
-    //elements concurrences
-    Object mutex = new Object();
-
     try {
       //recuperer les adresses des fragments
       List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.inFname);
@@ -89,6 +87,11 @@ public class Job implements JobInterfaceX {
 
       //liste des adresses des nouveaux fragments
       List<InfoAdresse> newAdresses = new LinkedList<InfoAdresse>();
+
+      //tableau d'activites
+      int nbActivites = adresses.size();
+      int cp = 0;
+      activites = new Thread[nbActivites];
 
       //traiter les fragments
       for (InfoEtendue info : adresses) {
@@ -107,14 +110,16 @@ public class Job implements JobInterfaceX {
         CallBack cb = new CallBack();
         //recuperer le worker
         WorkerInterface worker = gWorker.getWorker(nomMachine);
-        synchronized (mutex) {
-          //traiter les fragments
-          System.out.println("JOB : runMap() de " + nomReaderMap + " a " + nomWriterMap);
-          worker.runMap(mr, readerMap, writerMap, cb);
-          //ajouter les nouvelles adresses à la liste
-          newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
-        }
+        //traiter les fragments
+        System.out.println("JOB : runMap() de " + nomReaderMap + " a " + nomWriterMap);
+        Runnable r = new Action(worker, mr, readerMap, writerMap, cb);
+        activites[cp] = new Thread(r);
+        activites[cp].start();
+        //ajouter les nouvelles adresses à la liste
+        newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
       }
+
+      finir(nbActivites);
 
       //ajouter les fragments au serveur de nommage
       nommage.enregistrerAdressesFragments(mpfname, newAdresses);    
@@ -142,6 +147,12 @@ public class Job implements JobInterfaceX {
       
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+
+  static void finir (int nbActivites) throws InterruptedException {
+    for (int i = 0; i<nbActivites; ++i) {
+      activites[i].join();
     }
   }
 
