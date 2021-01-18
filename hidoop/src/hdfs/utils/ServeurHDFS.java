@@ -35,7 +35,7 @@ public class ServeurHDFS {
             }
 
             // Register the object with the naming service
-            Naming.rebind("//"+args[3]+":"+port+"/serviceHDFS"+args[2], frag);
+            Naming.rebind("//"+InetAddress.getLocalHost().getHostName()+":"+port+"/serviceHDFS"+args[2], frag);
             System.out.println(" bound in registry");
         } catch (Exception exc) {System.out.println(exc.getMessage()); }
     }
