@@ -41,7 +41,7 @@ public class MyMapReduce implements MapReduce {
     }
 
     public static void main(String args[]) {
-        Job j = new Job(args[0], Format.Type.LINE, Format.Type.LINE);
+        Job j = new Job(args[0], Format.Type.KV, Format.Type.KV);
         long t1 = System.currentTimeMillis();
         j.startJob(new MyMapReduce());
         long t2 = System.currentTimeMillis();
