@@ -11,6 +11,7 @@ public class ServeurHDFS {
     //args[1] = port
     //args[2] nom de la machine
     //args[3] fragment type
+    //args[4] adresse machine
     public static void main(String args[]) {
         try {
             int port = Integer.parseInt(args[1]);
@@ -34,7 +35,7 @@ public class ServeurHDFS {
             }
 
             // Register the object with the naming service
-            Naming.rebind("//"+ InetAddress.getLocalHost().getHostName()+":"+port+"/serviceHDFS"+args[2], frag);
+            Naming.rebind("//"+args[3]+":"+port+"/serviceHDFS"+args[2], frag);
             System.out.println(" bound in registry");
         } catch (Exception exc) {System.out.println(exc.getMessage()); }
     }
