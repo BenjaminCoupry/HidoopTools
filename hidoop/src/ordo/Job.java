@@ -94,9 +94,6 @@ public class Job implements JobInterfaceX {
       int cp = 0;
       activites = new Thread[nbActivites];
 
-      //objet CallBack
-      CallBack cb = new CallBack();
-
       //traiter les fragments
       for (InfoEtendue info : adresses) {
         //recuperer le nom de la machine
@@ -115,18 +112,12 @@ public class Job implements JobInterfaceX {
         WorkerInterface worker = gWorker.getWorker(nomMachine);
         //traiter les fragments
         System.out.println("JOB : runMap() de " + nomReaderMap + " a " + nomWriterMap);
-        Runnable r = new Action(worker, mr, readerMap, writerMap, cb);
+        Runnable r = new Action(worker, mr, readerMap, writerMap);
         activites[cp] = new Thread(r);
         activites[cp].start();
         //ajouter les nouvelles adresses à la liste
         newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
         ++cp;
-      }
-
-      System.out.println("JOB : Attendre la fin du traitement de chaque fragment ...");
-      while (cb.get() < nbActivites) { //seulement utile pour l'affichage
-        System.out.println("...");
-        Thread.sleep(2000);
       }
 
       finir(nbActivites);

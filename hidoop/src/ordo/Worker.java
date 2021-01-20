@@ -12,7 +12,7 @@ public class Worker extends UnicastRemoteObject implements WorkerInterface {
   
   public Worker () throws RemoteException {}
 
-  public void runMap (Mapper m, Format reader, Format writer, CallBack cb) throws RemoteException {
+  public void runMap (Mapper m, Format reader, Format writer) throws RemoteException {
     reader.open(Format.OpenMode.R);
     writer.open(Format.OpenMode.W);
     m.map(reader, writer);
