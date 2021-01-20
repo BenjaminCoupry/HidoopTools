@@ -126,7 +126,7 @@ public class Job implements JobInterfaceX {
       System.out.println("JOB : Attendre la fin du traitement de chaque fragment ...");
       while (cb.get() < nbActivites) { //seulement utile pour l'affichage
         System.out.println("...");
-        Thread.sleep(4000);
+        Thread.sleep(2000);
       }
 
       finir(nbActivites);
