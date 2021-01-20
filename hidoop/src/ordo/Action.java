@@ -26,7 +26,6 @@ public class Action implements Runnable {
             //traiter les fragments
             worker.runMap(mr, readerMap, writerMap, cb);
             cb.incr();
-            System.out.println(cb.get());
         } catch (RemoteException e) {
             e.printStackTrace();
             System.out.println(e.getMessage());

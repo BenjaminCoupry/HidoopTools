@@ -18,7 +18,6 @@ public class Job implements JobInterfaceX {
   private String outFname;
   private String inFname;
   static Thread[] activites;
-  static Object mutex = new Object();
 
   public Job(String inFname, Format.Type inFormat, Format.Type outFormat) {
     this.inFname = inFname;
@@ -123,10 +122,9 @@ public class Job implements JobInterfaceX {
         ++cp;
       }
 
-      System.out.print("JOB : Attendre la fin du traitement de chaque fragment ...");
+      System.out.println("JOB : Attendre la fin du traitement de chaque fragment ...");
       while (cb.get() < nbActivites) { //seulement utile pour l'affichage
         System.out.println("...");
-        System.out.println(cb.get());
         Thread.sleep(4000);
       }
 
