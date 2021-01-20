@@ -99,8 +99,8 @@ public class Job implements JobInterfaceX {
         //recuperer le nom de la machine
         String nomMachine = info.getNomMachine();
         // recuperer le nom du fichier
-        String nomReaderMap = info.getRepertoire() + info.getNomLocal();
-        String nomWriterMap = info.getRepertoire() + "res-" + info.getNomLocal();
+        String nomReaderMap = info.getRepertoire() + "/" + info.getNomLocal();
+        String nomWriterMap = info.getRepertoire() + "/res-" + info.getNomLocal();
         Format readerMap;
         if (this.inFormat == Type.KV) {
           readerMap = new KVFormatS(nomReaderMap);
