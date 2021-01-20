@@ -9,8 +9,8 @@ import java.rmi.registry.LocateRegistry;
 public class ServeurHDFS {
     //args[0] = dossier ou le service enregistre les fragments
     //args[1] = port
-    //args[2] nom de la machine
-    //args[3] fragment type
+    //args[2] = nom de la machine
+    //args[3] = fragment type
     public static void main(String args[]) {
         try {
             int port = Integer.parseInt(args[1]);
