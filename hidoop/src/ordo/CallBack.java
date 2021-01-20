@@ -1,23 +1,24 @@
 package ordo;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class CallBack implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private AtomicInteger compteur;
+    private int compteur;
 
     public CallBack () {
-        new AtomicInteger();
+        compteur = 0;
     }
 
     public void incr () {
-        this.compteur.incrementAndGet();
+        synchronized (Job.mutex) {
+            ++compteur;
+        }
     }
 
     public int get () {
-        return this.compteur.get();
+        return compteur;
     }
 }

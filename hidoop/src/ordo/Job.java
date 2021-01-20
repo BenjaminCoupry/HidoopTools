@@ -18,6 +18,7 @@ public class Job implements JobInterfaceX {
   private String outFname;
   private String inFname;
   static Thread[] activites;
+  static Object mutex = new Object();
 
   public Job(String inFname, Format.Type inFormat, Format.Type outFormat) {
     this.inFname = inFname;
