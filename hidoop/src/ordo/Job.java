@@ -18,6 +18,7 @@ public class Job implements JobInterfaceX {
   private String outFname;
   private String inFname;
   static Thread[] activites;
+  static Object mutex = new Object();
 
   public Job(String inFname, Format.Type inFormat, Format.Type outFormat) {
     this.inFname = inFname;
@@ -93,6 +94,9 @@ public class Job implements JobInterfaceX {
       int cp = 0;
       activites = new Thread[nbActivites];
 
+      //objet CallBack
+      CallBack cb = new CallBack();
+
       //traiter les fragments
       for (InfoEtendue info : adresses) {
         //recuperer le nom de la machine
@@ -107,7 +111,6 @@ public class Job implements JobInterfaceX {
           readerMap = new LineFormatS(nomReaderMap);
         }
         Format writerMap = new KVFormatS(nomWriterMap);
-        CallBack cb = new CallBack();
         //recuperer le worker
         WorkerInterface worker = gWorker.getWorker(nomMachine);
         //traiter les fragments
@@ -117,7 +120,15 @@ public class Job implements JobInterfaceX {
         activites[cp].start();
         //ajouter les nouvelles adresses à la liste
         newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
+        ++cp;
       }
+
+      System.out.print("JOB : Attendre la fin du traitement de chaque fragment ...");
+      System.out.println(cb.get());
+      while (cb.get() < nbActivites) { //seulement utile pour l'affichage
+        //System.out.print(".");
+      }
+      System.out.println("");
 
       finir(nbActivites);
 

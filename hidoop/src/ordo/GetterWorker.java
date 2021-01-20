@@ -33,7 +33,6 @@ public class GetterWorker {
                         System.out.println(exc.getMessage());
                         exc.printStackTrace();
                     }
-                    break;
                 }
             }
             sc.close();     //closes the scanner

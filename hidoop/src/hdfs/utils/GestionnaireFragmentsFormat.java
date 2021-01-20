@@ -180,8 +180,9 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
                 {
                     max = v;
                 }
-            }catch(Exception e)
-            {
+            } catch (NumberFormatException e) {
+                //fichier généré par le mapreduce
+            } catch(Exception e) {
                 e.printStackTrace();
             }
         }

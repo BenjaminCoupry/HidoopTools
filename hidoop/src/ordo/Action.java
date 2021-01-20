@@ -1,7 +1,5 @@
 package ordo;
 
-import hdfs.utils.*;
-
 import java.rmi.RemoteException;
 
 import formats.*;
@@ -27,8 +25,10 @@ public class Action implements Runnable {
         try {
             //traiter les fragments
             worker.runMap(mr, readerMap, writerMap, cb);
+            cb.incr();
         } catch (RemoteException e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }
