@@ -22,7 +22,7 @@ public class Job implements JobInterfaceX {
 
   public Job(String inFname, Format.Type inFormat, Format.Type outFormat) {
     this.inFname = inFname;
-    this.outFname = "final-" + inFname;
+    this.outFname = inFname + "-final";
     this.inFormat = inFormat;
     this.outFormat = outFormat;
   }
@@ -84,7 +84,7 @@ public class Job implements JobInterfaceX {
       List<InfoEtendue> adresses = hdfsu.getAdressesFragments(this.inFname);
 
       //nom du fichier traite
-      String mpfname = "res-" + this.inFname;
+      String mpfname = this.inFname + "-res";
 
       //liste des adresses des nouveaux fragments
       List<InfoAdresse> newAdresses = new LinkedList<InfoAdresse>();
@@ -100,7 +100,7 @@ public class Job implements JobInterfaceX {
         String nomMachine = info.getNomMachine();
         // recuperer le nom du fichier
         String nomReaderMap = info.getRepertoire() + "/" + info.getNomLocal();
-        String nomWriterMap = info.getRepertoire() + "/res-" + info.getNomLocal();
+        String nomWriterMap = info.getRepertoire() + "/" + info.getNomLocal() + "-res";
         Format readerMap;
         if (this.inFormat == Type.KV) {
           readerMap = new KVFormatS(nomReaderMap);
@@ -116,7 +116,7 @@ public class Job implements JobInterfaceX {
         activites[cp] = new Thread(r);
         activites[cp].start();
         //ajouter les nouvelles adresses à la liste
-        newAdresses.add(new AdresseFrag(info.getNomMachine(), "res-" + info.getNomLocal(), mpfname));
+        newAdresses.add(new AdresseFrag(info.getNomMachine(), info.getNomLocal() + "-res", mpfname));
         ++cp;
       }
 
@@ -126,7 +126,7 @@ public class Job implements JobInterfaceX {
       nommage.enregistrerAdressesFragments(mpfname, newAdresses);    
 
       //lire le nouveau fichier creer à partir des nouveaux fragments
-      String nomReaderRed = "loc-" + mpfname;
+      String nomReaderRed = mpfname + "-loc";
       System.out.println("JOB : Lire " + mpfname + " dans " + nomReaderRed);
       HdfsClient.HdfsRead(mpfname, nomReaderRed);
 
