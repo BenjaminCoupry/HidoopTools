@@ -54,7 +54,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
     }
 
     //@Nullable
-    //Recupere le fichier du fragment a partir du nom du fragment (sans extension)
+    //Recupere le fichier du fragment a partir du nom du fragment (avec extension)
     private File getFichNom(String nomFichier)
     {
         List<File> inDir = getFichInDir();
@@ -153,7 +153,7 @@ public class GestionnaireFragmentsFormat extends UnicastRemoteObject implements 
 
     @Override
     //Indique si un fragment est stocke dans le repertoire de travail
-    // a partir du nom du fragment (sans extension)
+    // a partir du nom du fragment (avec extension)
     public boolean fragmentExiste(String nom) {
         File f = getFichNom(nom);
         if(f!= null)
