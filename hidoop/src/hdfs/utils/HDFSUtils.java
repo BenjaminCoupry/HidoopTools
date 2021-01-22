@@ -63,7 +63,7 @@ public class HDFSUtils {
         //Parcourir les fragments
         for(List<KV> o : frags)
         {
-            System.out.println("ecriture du fragment "+o);
+            System.out.println("ecriture du fragment");
             try {
                 //Recuperer le nom de la machine n
                 String machine = machines.get(n % machines.size());
